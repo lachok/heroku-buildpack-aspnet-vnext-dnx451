@@ -53,7 +53,11 @@ function conditional_download() {
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 echo "LP_DIR:" | arrow
-echo "       $LP_DIR"
+echo "$LP_DIR" | indent
+
+
+echo "cache_dir:" | arrow
+echo "${cache_dir}" | indent
 
 cd ${build_dir}
 mkdir -p ${cache_dir}
