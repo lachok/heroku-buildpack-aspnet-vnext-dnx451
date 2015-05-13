@@ -96,8 +96,8 @@ echo "MONO VERSION:" | arrow
 mono --version
 
 # Add certs to trust store
-cp -r ${LP_DIR}/.config ~/.
-cp -r ${LP_DIR}/.config ${BUILD_DIR}/.
+cp -r $LP_DIR/.config ~/.
+cp -r $LP_DIR/.config ${BUILD_DIR}/.
 
 
 # 2. Install DNVM
