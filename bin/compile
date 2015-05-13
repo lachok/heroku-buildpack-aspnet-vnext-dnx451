@@ -107,7 +107,10 @@ export LD_LIBRARY_PATH="~/mono/lib:${LD_LIBRARY_PATH}"
 
 echo "Checking for NuGet.config" | arrow
 if [ ! -f ~/.config/NuGet/NuGet.config ]; then
-    echo -e "~/.config/NuGet/NuGet.config not found, creating..." | indent
+    echo "~/.config/NuGet/NuGet.config not found, creating..." | indent
+    mkdir ~/.config/NuGet
+    touch ~/.config/NuGet/NuGet.config
+    
     echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > ~/.config/NuGet/NuGet.config
     echo -e "<configuration>" >> ~/.config/NuGet/NuGet.config
     echo -e "  <packageSources>" >> ~/.config/NuGet/NuGet.config
