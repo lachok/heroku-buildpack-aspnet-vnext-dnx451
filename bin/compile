@@ -111,23 +111,23 @@ cp ~/.bash_profile ${build_dir}/.bash_profile
 cp -r ~/.dnx ${build_dir}/.
 
 
-echo "Checking for NuGet.config" | arrow
-if [ ! -f ~/.config/NuGet/NuGet.config ]; then
-    echo "~/.config/NuGet/NuGet.config not found, creating..." | indent
+echo "Checking for NuGet.Config" | arrow
+if [ ! -f ~/.config/NuGet/NuGet.Config ]; then
+    echo "~/.config/NuGet/NuGet.Config not found, creating..." | indent
     mkdir -p ~/.config/NuGet
-    touch ~/.config/NuGet/NuGet.config
+    touch ~/.config/NuGet/NuGet.Config
     
-    echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > ~/.config/NuGet/NuGet.config
-    echo -e "<configuration>" >> ~/.config/NuGet/NuGet.config
-    echo -e "  <packageSources>" >> ~/.config/NuGet/NuGet.config
-    echo -e "    <add key=\"AspNetVNext\" value=\"http://www.myget.org/F/aspnetvnext/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
-    echo -e "    <add key=\"nuget.org\" value=\"http://www.nuget.org/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
-    echo -e "  </packageSources>" >> ~/.config/NuGet/NuGet.config
-    echo -e "  <disabledPackageSources />" >> ~/.config/NuGet/NuGet.config
-    echo -e "</configuration>" >> ~/.config/NuGet/NuGet.config
+    echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > ~/.config/NuGet/NuGet.Config
+    echo -e "<configuration>" >> ~/.config/NuGet/NuGet.Config
+    echo -e "  <packageSources>" >> ~/.config/NuGet/NuGet.Config
+    echo -e "    <add key=\"AspNetVNext\" value=\"https://www.myget.org/F/aspnetvnext/api/v2/\" />" >> ~/.config/NuGet/NuGet.Config
+    echo -e "    <add key=\"nuget.org\" value=\"https://www.nuget.org/api/v2/\" />" >> ~/.config/NuGet/NuGet.Config
+    echo -e "  </packageSources>" >> ~/.config/NuGet/NuGet.Config
+    echo -e "  <disabledPackageSources />" >> ~/.config/NuGet/NuGet.Config
+    echo -e "</configuration>" >> ~/.config/NuGet/NuGet.Config
 else
-    echo "Found ~/.config/NuGet/NuGet.config" | indent
-    cat ~/.config/NuGet/NuGet.config | indent
+    echo "Found ~/.config/NuGet/NuGet.Config" | indent
+    cat ~/.config/NuGet/NuGet.Config | indent
 fi
 
 # 3.1 Restore project packages...
