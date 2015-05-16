@@ -73,33 +73,17 @@ ln -s "${build_dir}/mono" /app
 export PATH="/app/mono/bin:${PATH}"
 export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
 
-echo "Checking for NuGet.config" | arrow
-if [ ! -f ~/.config/NuGet/NuGet.config ]; then
-    echo "~/.config/NuGet/NuGet.config not found, creating..." | indent
-    mkdir -p ~/.config/NuGet
-    touch ~/.config/NuGet/NuGet.config
-    
-    echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > ~/.config/NuGet/NuGet.Config
-    echo -e "<configuration>" >> ~/.config/NuGet/NuGet.config
-    echo -e "  <packageSources>" >> ~/.config/NuGet/NuGet.config
-    echo -e "    <add key=\"AspNetVNext\" value=\"http://www.myget.org/F/aspnetvnext/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
-    echo -e "    <add key=\"nuget.org\" value=\"http://www.nuget.org/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
-    echo -e "  </packageSources>" >> ~/.config/NuGet/NuGet.config
-    echo -e "  <disabledPackageSources />" >> ~/.config/NuGet/NuGet.config
-    echo -e "</configuration>" >> ~/.config/NuGet/NuGet.config
-else
-    echo "Found ~/.config/NuGet/NuGet.config" | indent
-    cat ~/.config/NuGet/NuGet.config | indent
-fi
-
 echo "MONO VERSION:" | arrow
 mono --version | indent
 
-# Add certs to trust store
-echo "cp -r ${LP_DIR}/.config ~/." | arrow
-cp -r ${LP_DIR}/.config ~/.
-echo "cp -r ${LP_DIR}/.config ${build_dir}/." | arrow
-cp -r ${LP_DIR}/.config ${build_dir}/.
+# Copy mono to packages
+mkdir -p /app/.packages
+cp -r /app/mono /app/.packages/.
+
+echo "Updating SSL certificates..." | arrow
+mozroots --import --sync | indent
+yes | certmgr -ssl "https://www.myget.org" | indent
+yes | certmgr -ssl "https://www.nuget.org" | indent
 
 # 2. Install DNVM
 
@@ -122,6 +106,26 @@ echo "cp ~/.bash_profile ${build_dir}/.bash_profile"
 echo "cp -r ~/.dnx ${build_dir}/."
 cp ~/.bash_profile ${build_dir}/.bash_profile
 cp -r ~/.dnx ${build_dir}/.
+
+
+echo "Checking for NuGet.config" | arrow
+if [ ! -f ~/.config/NuGet/NuGet.config ]; then
+    echo "~/.config/NuGet/NuGet.config not found, creating..." | indent
+    mkdir -p ~/.config/NuGet
+    touch ~/.config/NuGet/NuGet.config
+    
+    echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > ~/.config/NuGet/NuGet.config
+    echo -e "<configuration>" >> ~/.config/NuGet/NuGet.config
+    echo -e "  <packageSources>" >> ~/.config/NuGet/NuGet.config
+    echo -e "    <add key=\"AspNetVNext\" value=\"http://www.myget.org/F/aspnetvnext/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
+    echo -e "    <add key=\"nuget.org\" value=\"http://www.nuget.org/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
+    echo -e "  </packageSources>" >> ~/.config/NuGet/NuGet.config
+    echo -e "  <disabledPackageSources />" >> ~/.config/NuGet/NuGet.config
+    echo -e "</configuration>" >> ~/.config/NuGet/NuGet.config
+else
+    echo "Found ~/.config/NuGet/NuGet.config" | indent
+    cat ~/.config/NuGet/NuGet.config | indent
+fi
 
 # 3.1 Restore project packages...
 echo "Restore project packages..." | arrow
