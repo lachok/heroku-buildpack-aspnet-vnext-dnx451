@@ -68,7 +68,7 @@ conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.
 # Copy mono from cache to where we're building the slug
 cp -r "${MONO_CACHE_LOCATION}/mono" .
 # Mono expects to be running out of /app
-ln -s "$build_dir/mono" /app
+ln -s "${build_dir}/mono" /app
 
 export PATH="/app/mono/bin:${PATH}"
 export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
@@ -96,10 +96,10 @@ echo "MONO VERSION:" | arrow
 mono --version | indent
 
 # Add certs to trust store
-echo "cp -r $LP_DIR/.config ~/." | arrow
-cp -r $LP_DIR/.config ~/.
-echo "cp -r $LP_DIR/.config ${BUILD_DIR}/." | arrow
-cp -r $LP_DIR/.config ${BUILD_DIR}/.
+echo "cp -r ${LP_DIR}/.config ~/." | arrow
+cp -r ${LP_DIR}/.config ~/.
+echo "cp -r ${LP_DIR}/.config ${build_dir}/." | arrow
+cp -r ${LP_DIR}/.config ${build_dir}/.
 
 
 # 2. Install DNVM
