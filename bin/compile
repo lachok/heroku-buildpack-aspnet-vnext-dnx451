@@ -72,6 +72,10 @@ PACKAGE_DIR="/app/.packages"
 mkdir -p "${PACKAGE_DIR}"
 cp -r "${MONO_CACHE_LOCATION}/mono" "${PACKAGE_DIR}/."
 
+# Copy mono to build dir
+mkdir -p "${build_dir}/.packages"
+cp -r "${MONO_CACHE_LOCATION}/mono" "${build_dir}/.packages/."
+
 #export PATH="/app/.packages/mono/bin:${PATH}"
 export PATH="${PACKAGE_DIR}/mono/bin:${PATH}"
 #export LD_LIBRARY_PATH="${build_dir}/.packages/mono/lib:${PACKAGE_DIR}/mono/lib:${LD_LIBRARY_PATH}"
