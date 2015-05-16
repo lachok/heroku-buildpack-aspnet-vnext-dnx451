@@ -82,8 +82,8 @@ if [ ! -f ~/.config/NuGet/NuGet.config ]; then
     echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > ~/.config/NuGet/NuGet.config
     echo -e "<configuration>" >> ~/.config/NuGet/NuGet.config
     echo -e "  <packageSources>" >> ~/.config/NuGet/NuGet.config
-    echo -e "    <add key=\"AspNetVNext\" value=\"https://www.myget.org/F/aspnetvnext/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
-    echo -e "    <add key=\"nuget.org\" value=\"https://www.nuget.org/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
+    echo -e "    <add key=\"AspNetVNext\" value=\"http://www.myget.org/F/aspnetvnext/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
+    echo -e "    <add key=\"nuget.org\" value=\"http://www.nuget.org/api/v2/\" />" >> ~/.config/NuGet/NuGet.config
     echo -e "  </packageSources>" >> ~/.config/NuGet/NuGet.config
     echo -e "  <disabledPackageSources />" >> ~/.config/NuGet/NuGet.config
     echo -e "</configuration>" >> ~/.config/NuGet/NuGet.config
@@ -101,19 +101,25 @@ cp -r ${LP_DIR}/.config ~/.
 echo "cp -r ${LP_DIR}/.config ${build_dir}/." | arrow
 cp -r ${LP_DIR}/.config ${build_dir}/.
 
-
 # 2. Install DNVM
+
+#Create ~/.bash_profile
+echo "Create ~/.bash_profile" | arrow
+touch ~/.bash_profile
+echo "...done" | indent
+
 echo "Install DNVM..." | arrow
-curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh && source ~/.dnx/dnvm/dnvm.sh
-#curl -sSL https://raw.githubusercontent.com/aspnet/Home/master/kvminstall.sh | sh && source ~/.kre/kvm/kvm.sh
+curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh
+source ~/.dnx/dnvm/dnvm.sh
+
 
 # 3. Install DNX
 echo "Install DNX..." | arrow
-dnvm upgrade
+dnvm upgrade | indent
 
 # 3.1 Restore project packages...
 echo "Restore project packages..." | arrow
-dnu restore
+dnu restore | indent
 
 # 4. Prepare Procfile
 #echo "-----> Procfile..."
