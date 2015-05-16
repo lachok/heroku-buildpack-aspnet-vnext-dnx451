@@ -55,30 +55,31 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 echo "LP_DIR:" | arrow
 echo "$LP_DIR" | indent
 
-
 echo "cache_dir:" | arrow
 echo "${cache_dir}" | indent
+
+echo "build_dir:" | arrow
+echo "${build_dir}" | indent
 
 cd ${build_dir}
 mkdir -p ${cache_dir}
 
 MONO_CACHE_LOCATION=${cache_dir}/${STACK}/mono-${MONO_VERSION}
 conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz ${MONO_CACHE_LOCATION}
+PACKAGE_DIR="/app/.packages"
 
 # Copy mono from cache to where we're building the slug
-cp -r "${MONO_CACHE_LOCATION}/mono" .
-# Mono expects to be running out of /app
-ln -s "${build_dir}/mono" /app
+cp -r "${MONO_CACHE_LOCATION}/mono" "${build_dir}/.packages/."
 
-export PATH="/app/mono/bin:${PATH}"
-export LD_LIBRARY_PATH="/app/mono/lib:${LD_LIBRARY_PATH}"
+# Copy mono to packages
+mkdir -p "${PACKAGE_DIR}"
+cp -r "${MONO_CACHE_LOCATION}/mono" "${PACKAGE_DIR}/."
+
+export PATH="${build_dir}/.packages/mono/bin:${PACKAGE_DIR}/mono/bin:${PATH}"
+export LD_LIBRARY_PATH="${build_dir}/.packages/mono/lib:${PACKAGE_DIR}/mono/lib:${LD_LIBRARY_PATH}"
 
 echo "MONO VERSION:" | arrow
 mono --version | indent
-
-# Copy mono to packages
-mkdir -p /app/.packages
-cp -r /app/mono /app/.packages/.
 
 echo "Updating SSL certificates..." | arrow
 mozroots --import --sync | indent
