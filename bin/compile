@@ -134,7 +134,7 @@ echo "Restore project packages..." | arrow
 echo "Creating Procfile..." | arrow
 echo "${build_dir}/Procfile" | indent
 
-echo "web: export PATH="/app/.packages/mono/bin:${PATH}";dnx . run" > $build_dir/Procfile
+echo "web: source ~/.dnx/dnvm/dnvm.sh;dnx . run" > $build_dir/Procfile
 
 echo "Procfile CAT..." | arrow
 cat $build_dir/Procfile | indent
