@@ -69,6 +69,7 @@ conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.
 PACKAGE_DIR="/app/.packages"
 
 # Copy mono from cache to where we're building the slug
+mkdir "${build_dir}/.packages"
 cp -r "${MONO_CACHE_LOCATION}/mono" "${build_dir}/.packages/."
 
 # Copy mono to packages
