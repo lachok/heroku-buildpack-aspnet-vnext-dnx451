@@ -129,6 +129,12 @@ fi
 echo "Restore project packages..." | arrow
 dnu restore | indent
 
+echo "Copy DNX to build directory..." | indent
+echo "cp ~/.bash_profile ${build_dir}/.bash_profile"
+echo "cp -r ~/.dnx ${build_dir}/."
+cp ~/.bash_profile ${build_dir}/.bash_profile
+cp -r ~/.dnx $build_dir/.
+
 # 3.2 Publish app
 echo "Publish app to /app/bin/output/approot" | arrow
 dnu publish -o /app/bin/output/approot | indent
