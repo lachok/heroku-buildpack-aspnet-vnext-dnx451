@@ -105,41 +105,40 @@ echo "Install DNX..." | arrow
 dnvm upgrade | indent
 
 
-
+NUGET_CONFIG = "${build_dir}/NuGet.Config"
 echo "Checking for NuGet.Config" | arrow
-if [ ! -f ~/.config/NuGet/NuGet.Config ]; then
-    echo "~/.config/NuGet/NuGet.Config not found, creating..." | indent
+if [ ! -f $NUGET_CONFIG ]; then
+    echo "${NUGET_CONFIG} not found, creating..." | indent
     mkdir -p ~/.config/NuGet
-    touch ~/.config/NuGet/NuGet.Config
+    touch $NUGET_CONFIG
     
-    echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > ~/.config/NuGet/NuGet.Config
-    echo -e "<configuration>" >> ~/.config/NuGet/NuGet.Config
-    echo -e "  <packageSources>" >> ~/.config/NuGet/NuGet.Config
-    echo -e "    <add key=\"AspNetVNext\" value=\"https://www.myget.org/F/aspnetvnext/api/v2/\" />" >> ~/.config/NuGet/NuGet.Config
-    echo -e "    <add key=\"nuget.org\" value=\"https://www.nuget.org/api/v2/\" />" >> ~/.config/NuGet/NuGet.Config
-    echo -e "  </packageSources>" >> ~/.config/NuGet/NuGet.Config
-    echo -e "  <disabledPackageSources />" >> ~/.config/NuGet/NuGet.Config
-    echo -e "</configuration>" >> ~/.config/NuGet/NuGet.Config
+    echo -e "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > "${NUGET_CONFIG}"
+    echo -e "<configuration>" >> "${NUGET_CONFIG}"
+    echo -e "  <packageSources>" >> "${NUGET_CONFIG}"
+    echo -e "    <add key=\"AspNetVNext\" value=\"https://www.myget.org/F/aspnetvnext/api/v2/\" />" >> "${NUGET_CONFIG}"
+    echo -e "    <add key=\"nuget.org\" value=\"https://www.nuget.org/api/v2/\" />" >> "${NUGET_CONFIG}"
+    echo -e "  </packageSources>" >> "${NUGET_CONFIG}"
+    echo -e "  <disabledPackageSources />" >> "${NUGET_CONFIG}"
+    echo -e "</configuration>" >> "${NUGET_CONFIG}"
 else
-    echo "Found ~/.config/NuGet/NuGet.Config" | indent
-    cat ~/.config/NuGet/NuGet.Config | indent
+    echo "Found "${NUGET_CONFIG}"" | indent
+    cat "${NUGET_CONFIG}" | indent
 fi
 
 # 3.1 Restore project packages...
 echo "Restore project packages..." | arrow
 dnu restore | indent
 
-echo "Copy DNX to build directory..." | indent
-echo "cp ~/.bash_profile ${build_dir}/.bash_profile"
-echo "cp -r ~/.dnx ${build_dir}/."
-cp ~/.bash_profile ${build_dir}/.bash_profile
-cp -r ~/.dnx ${build_dir}/.
+# 3.2 Publish app
+echo "Publish app to /app/bin/output/approot" | arrow
+dnu publish -o /app/bin/output/approot | indent
+
 
 # 4. Prepare Procfile
 echo "Creating Procfile..." | arrow
 echo "${build_dir}/Procfile" | indent
 
-echo "web: source ~/.dnx/dnvm/dnvm.sh;dnu restore;dnx . run" > $build_dir/Procfile
+echo "web: source ~/.dnx/dnvm/dnvm.sh;dnx /app/bin/output/approot/src/app/ run" > $build_dir/Procfile
 
 echo "Procfile CAT..." | arrow
 cat $build_dir/Procfile | indent
