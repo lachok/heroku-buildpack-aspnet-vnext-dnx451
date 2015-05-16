@@ -134,6 +134,9 @@ fi
 echo "Restore project packages..." | arrow
 /app/.dnx/runtimes/dnx-mono.1.0.0-beta4/bin/dnu restore | indent
 
+echo "Copy packages to build dir..." | arrow
+cp -r "~/.dnx/packages" "${build_dir}/."
+
 # 4. Prepare Procfile
 echo "Creating Procfile..." | arrow
 echo "${build_dir}/Procfile" | indent
