@@ -105,7 +105,7 @@ echo "Install DNX..." | arrow
 dnvm upgrade | indent
 
 
-NUGET_CONFIG = "${build_dir}/NuGet.Config"
+NUGET_CONFIG="${build_dir}/NuGet.Config"
 echo "Checking for NuGet.Config" | arrow
 if [ ! -f $NUGET_CONFIG ]; then
     echo "${NUGET_CONFIG} not found, creating..." | indent
