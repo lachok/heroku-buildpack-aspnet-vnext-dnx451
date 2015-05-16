@@ -93,10 +93,12 @@ else
 fi
 
 echo "MONO VERSION:" | arrow
-mono --version
+mono --version | indent
 
 # Add certs to trust store
-cp -r $LP_DIR/.config /app/.
+echo "cp -r $LP_DIR/.config ~/." | arrow
+cp -r $LP_DIR/.config ~/.
+echo "cp -r $LP_DIR/.config ${BUILD_DIR}/." | arrow
 cp -r $LP_DIR/.config ${BUILD_DIR}/.
 
 
