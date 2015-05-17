@@ -136,7 +136,7 @@ cp -r ~/.dnx $build_dir/.
 echo "Publish app to ${build_dir}/bin/output" | arrow
 dnu publish -o "${build_dir}/bin/output" | indent
 
-app_dir_name="basename `ls ${build_dir}/bin/output/approot/src/`"
+app_dir_name=`ls ${build_dir}/bin/output/approot/src/`
 echo "app_dir_name is ${app_dir_name}" | arrow
 
 # 4. Prepare Procfile
