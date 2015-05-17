@@ -53,7 +53,7 @@ function conditional_download() {
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 echo "LP_DIR:" | arrow
-echo "$LP_DIR" | indent
+echo "${LP_DIR}" | indent
 
 echo "cache_dir:" | arrow
 echo "${cache_dir}" | indent
@@ -66,42 +66,35 @@ mkdir -p ${cache_dir}
 
 MONO_CACHE_LOCATION=${cache_dir}/${STACK}/mono-${MONO_VERSION}
 conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz ${MONO_CACHE_LOCATION}
-PACKAGE_DIR="/app/.packages"
 
-# Copy mono to packages
-mkdir -p "${PACKAGE_DIR}"
-cp -r "${MONO_CACHE_LOCATION}/mono" "${PACKAGE_DIR}/."
-
-# Copy mono to build dir
+# Copy mono to .packages
 mkdir -p "${build_dir}/.packages"
 cp -r "${MONO_CACHE_LOCATION}/mono" "${build_dir}/.packages/."
 
 #export PATH="/app/.packages/mono/bin:${PATH}"
-export PATH="${PACKAGE_DIR}/mono/bin:${PATH}"
-#export LD_LIBRARY_PATH="${build_dir}/.packages/mono/lib:${PACKAGE_DIR}/mono/lib:${LD_LIBRARY_PATH}"
+export PATH="${build_dir}/.packages/mono/bin:${PATH}"
 
 echo "MONO VERSION:" | arrow
 mono --version | indent
 
 echo "Updating SSL certificates..." | arrow
-mozroots --import --sync | indent
+mozroots --import --sync --quiet | indent
 yes | certmgr -ssl "https://www.myget.org" | indent
 yes | certmgr -ssl "https://www.nuget.org" | indent
 
 # 2. Install DNVM
 
-#Create ~/.bash_profile
-echo "Create ~/.bash_profile" | arrow
+#Create ~/.bash_profile to suppress warnings
+echo "Creating ~/.bash_profile" | arrow
 touch ~/.bash_profile
-echo "...done" | indent
 
-echo "Install DNVM..." | arrow
+echo "Installing DNVM..." | arrow
 curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh
 source ~/.dnx/dnvm/dnvm.sh
 
 
 # 3. Install DNX
-echo "Install DNX..." | arrow
+echo "Installing DNX..." | arrow
 dnvm upgrade | indent
 
 
@@ -130,21 +123,23 @@ echo "Restore project packages..." | arrow
 dnu restore | indent
 
 echo "Copy DNX to build directory..." | indent
-echo "cp ~/.bash_profile ${build_dir}/.bash_profile"
 echo "cp -r ~/.dnx ${build_dir}/."
-cp ~/.bash_profile ${build_dir}/.bash_profile
 cp -r ~/.dnx $build_dir/.
 
 # 3.2 Publish app
-echo "Publish app to /app/bin/output/approot" | arrow
-dnu publish -o /app/bin/output/approot | indent
+echo "Publish app to ${build_dir}/bin/output" | arrow
+dnu publish -o "${build_dir}/bin/output" | indent
+
+# 3.3 Create app start script
+`cd $(dirname $0); cd ..; pwd`
+echo "ls -d */" > "${build_dir}/bin/output/run"
 
 
 # 4. Prepare Procfile
 echo "Creating Procfile..." | arrow
 echo "${build_dir}/Procfile" | indent
 
-echo "web: source ~/.dnx/dnvm/dnvm.sh;dnx /app/bin/output/approot/src/app/ run" > $build_dir/Procfile
+echo "web: source ~/.dnx/dnvm/dnvm.sh;dnx `ls -d /app/bin/output/approot/src/*/`/ run" > $build_dir/Procfile
 
 echo "Procfile CAT..." | arrow
 cat $build_dir/Procfile | indent
