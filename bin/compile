@@ -118,6 +118,7 @@ else
     cat "${NUGET_CONFIG}" | indent
 fi
 
+source ~/.dnx/dnvm/dnvm.sh
 # 3.1 Restore project packages...
 echo "Restore project packages..." | arrow
 dnu restore | indent
@@ -129,10 +130,6 @@ cp -r ~/.dnx $build_dir/.
 # 3.2 Publish app
 echo "Publish app to ${build_dir}/bin/output" | arrow
 dnu publish -o "${build_dir}/bin/output" | indent
-
-# 3.3 Create app start script
-`cd $(dirname $0); cd ..; pwd`
-echo "ls -d */" > "${build_dir}/bin/output/run"
 
 
 # 4. Prepare Procfile
