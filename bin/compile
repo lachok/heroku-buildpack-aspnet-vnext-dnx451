@@ -83,7 +83,7 @@ echo "MONO VERSION:" | arrow
 mono --version | indent
 
 echo "Updating SSL certificates..." | arrow
-mozroots --import --sync | indent
+mozroots --import --sync --quiet | indent
 yes | certmgr -ssl "https://www.myget.org" | indent
 yes | certmgr -ssl "https://www.nuget.org" | indent
 
