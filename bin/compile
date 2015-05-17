@@ -141,7 +141,7 @@ dnu publish -o "${build_dir}/bin/output" | indent
 echo "Creating Procfile..." | arrow
 echo "${build_dir}/Procfile" | indent
 
-echo "web: source ~/.dnx/dnvm/dnvm.sh;dnx /app/bin/output/approot/src/app/ run" > $build_dir/Procfile
+echo "web: source ~/.dnx/dnvm/dnvm.sh;dnx `ls -d /app/bin/output/approot/src/*/`/ run" > $build_dir/Procfile
 
 echo "Procfile CAT..." | arrow
 cat $build_dir/Procfile | indent
