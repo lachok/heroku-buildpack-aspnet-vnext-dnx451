@@ -95,6 +95,7 @@ touch ~/.bash_profile
 
 echo "Installing DNVM..." | arrow
 curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh
+source ~/.dnx/dnvm/dnvm.sh
 
 
 # 3. Install DNX
