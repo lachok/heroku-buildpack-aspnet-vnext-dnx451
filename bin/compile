@@ -66,6 +66,11 @@ mkdir -p ${cache_dir}
 
 MONO_CACHE_LOCATION=${cache_dir}/${STACK}/mono-${MONO_VERSION}
 conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz ${MONO_CACHE_LOCATION}
+PACKAGE_DIR="/app/.packages"
+
+# Copy mono to /app/.packages
+mkdir -p "${PACKAGE_DIR}"
+cp -r "${MONO_CACHE_LOCATION}/mono" "${PACKAGE_DIR}/."
 
 # Copy mono to .packages
 mkdir -p "${build_dir}/.packages"
