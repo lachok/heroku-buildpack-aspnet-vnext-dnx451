@@ -68,7 +68,7 @@ MONO_CACHE_LOCATION=${cache_dir}/${STACK}/mono-${MONO_VERSION}
 conditional_download ${DEPENDENCY_S3_BUCKET_PATH}/${STACK}/mono-${MONO_VERSION}.tar.gz ${MONO_CACHE_LOCATION}
 PACKAGE_DIR="/app/.packages"
 
-# Copy mono to /app/.packages
+# Copy mono to /app/.packages because mono expects to run out of /app/.packages
 mkdir -p "${PACKAGE_DIR}"
 cp -r "${MONO_CACHE_LOCATION}/mono" "${PACKAGE_DIR}/."
 
@@ -95,7 +95,6 @@ touch ~/.bash_profile
 
 echo "Installing DNVM..." | arrow
 curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh
-source ~/.dnx/dnvm/dnvm.sh
 
 
 # 3. Install DNX
@@ -103,6 +102,7 @@ echo "Installing DNX..." | arrow
 dnvm upgrade | indent
 
 
+# 3.1 Restore project packages...
 NUGET_CONFIG="${build_dir}/NuGet.Config"
 echo "Checking for NuGet.Config" | arrow
 if [ ! -f $NUGET_CONFIG ]; then
@@ -124,7 +124,7 @@ else
 fi
 
 source ~/.dnx/dnvm/dnvm.sh
-# 3.1 Restore project packages...
+
 echo "Restore project packages..." | arrow
 dnu restore | indent
 
